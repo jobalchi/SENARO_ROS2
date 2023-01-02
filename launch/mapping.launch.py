@@ -3,7 +3,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, ExecuteProcess
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from launch.actions import IncludeLaunchDescription
@@ -12,13 +12,17 @@ from launch.substitutions import ThisLaunchFileDir
  
  
 def generate_launch_description():
+    package_name = "senaro"
+
+    pkg_path = os.path.join(get_package_share_directory(package_name))
+
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     # cartographer package
     cartographer_prefix = get_package_share_directory('cartographer_ros')
     cartographer_config_dir = LaunchConfiguration('cartographer_config_dir', default=os.path.join(
-                                                  cartographer_prefix, 'configuration_files'))
+                                                  pkg_path, 'configuration'))
     configuration_basename = LaunchConfiguration('configuration_basename',
-                                                 default='backpack_2d.lua')
+                                                 default='cartographer_2d.lua')
  
     resolution = LaunchConfiguration('resolution', default='0.05')
     publish_period_sec = LaunchConfiguration('publish_period_sec', default='1.0')
@@ -34,6 +38,15 @@ def generate_launch_description():
     start_tracer_mini_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(tracer_prefix, 'launch', 'tracer_mini_base.launch.py'))
     )
+
+    base_to_laser_publisher = ExecuteProcess(
+        cmd=["ros2", "run", "tf2_ros", "static_transform_publisher", '0', '0', '0.1', '0', '0', '0', "base_link", "laser"], output="screen"
+    )
+    odom_to_base_publisher = ExecuteProcess(
+        cmd=["ros2", "run", "tf2_ros", "static_transform_publisher", '0', '0', '0', '0', '0', '0', "base_link", "imu_link"], output="screen"
+    )
+
+    rviz_config = os.path.join(pkg_path, "configuration", "mapping_rviz.rviz")
  
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -72,12 +85,14 @@ def generate_launch_description():
             launch_arguments={'use_sim_time': use_sim_time, 'resolution': resolution,
                               'publish_period_sec': publish_period_sec}.items(),
         ),
+        base_to_laser_publisher,
+        odom_to_base_publisher,
         start_s2lidar_cmd,
         start_tracer_mini_cmd, 
         Node(
             package='rviz2',
             node_executable='rviz2',
             node_name='rviz2',
-            parameters=[{'use_sim_time': use_sim_time}],
+            parameters=[{'use_sim_time': use_sim_time, 'd': rviz_config}],
             output='screen'),
     ])
