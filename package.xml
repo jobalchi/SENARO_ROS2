@@ -4,7 +4,7 @@
   <name>senaro</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="senaro@gmail.com">KIM</maintainer>
+  <maintainer email="senaro@gmail.com">LEE</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
