@@ -25,9 +25,14 @@ def generate_launch_description():
 
     # s2lidar package
     s2lidar_prefix = get_package_share_directory('sllidar_ros2')
-    # print(os.path.join(s2lidar_prefix, 'launch', 'sllidar_s2_launch.py'))
     start_s2lidar_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(s2lidar_prefix, 'launch', 'sllidar_s2_launch.py'))
+    )
+
+    # tracer mini package
+    tracer_prefix = get_package_share_directory('tracer_base')
+    start_tracer_mini_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(tracer_prefix, 'launch', 'tracer_mini_base.launch.py'))
     )
  
     return LaunchDescription([
@@ -68,7 +73,7 @@ def generate_launch_description():
                               'publish_period_sec': publish_period_sec}.items(),
         ),
         start_s2lidar_cmd,
- 
+        start_tracer_mini_cmd, 
         Node(
             package='rviz2',
             node_executable='rviz2',
