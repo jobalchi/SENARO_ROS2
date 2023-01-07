@@ -27,24 +27,7 @@ def generate_launch_description():
     resolution = LaunchConfiguration('resolution', default='0.05')
     publish_period_sec = LaunchConfiguration('publish_period_sec', default='1.0')
 
-    # s2lidar package
-    s2lidar_prefix = get_package_share_directory('sllidar_ros2')
-    start_s2lidar_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(s2lidar_prefix, 'launch', 'sllidar_s2_launch.py'))
-    )
-
-    # tracer mini package
-    tracer_prefix = get_package_share_directory('tracer_base')
-    start_tracer_mini_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(tracer_prefix, 'launch', 'tracer_mini_base.launch.py'))
-    )
-
-    base_to_laser_publisher = ExecuteProcess(
-        cmd=["ros2", "run", "tf2_ros", "static_transform_publisher", '0', '0', '0.1', '0', '0', '0', "base_link", "laser"], output="screen"
-    )
-    odom_to_base_publisher = ExecuteProcess(
-        cmd=["ros2", "run", "tf2_ros", "static_transform_publisher", '0', '0', '0', '0', '0', '0', "base_link", "imu_link"], output="screen"
-    )
+    
 
     rviz_config = os.path.join(pkg_path, "configuration", "mapping_rviz.rviz")
  
@@ -63,8 +46,8 @@ def generate_launch_description():
             description='Use simulation (Gazebo) clock if true'),
         Node(
             package='cartographer_ros',
-            node_executable='cartographer_node',
-            node_name='cartographer_node',
+            executable='cartographer_node',
+            name='cartographer_node',
             output='screen',
             parameters=[{'use_sim_time': use_sim_time}],
             arguments=['-configuration_directory', cartographer_config_dir,
@@ -85,14 +68,15 @@ def generate_launch_description():
             launch_arguments={'use_sim_time': use_sim_time, 'resolution': resolution,
                               'publish_period_sec': publish_period_sec}.items(),
         ),
-        base_to_laser_publisher,
-        odom_to_base_publisher,
-        start_s2lidar_cmd,
-        start_tracer_mini_cmd, 
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([ThisLaunchFileDir(), '/robot_description.launch.py']),
+        ),
+         
         Node(
             package='rviz2',
-            node_executable='rviz2',
-            node_name='rviz2',
+            executable='rviz2',
+            name='rviz2',
             parameters=[{'use_sim_time': use_sim_time, 'd': rviz_config}],
             output='screen'),
     ])
