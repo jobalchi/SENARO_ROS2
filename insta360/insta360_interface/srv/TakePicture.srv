@@ -1,0 +1,6 @@
+string target_path
+string source_path
+bool execute_take_photo
+---
+bool is_successed
+string source_path

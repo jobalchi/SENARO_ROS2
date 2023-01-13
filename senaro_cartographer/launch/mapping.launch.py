@@ -12,7 +12,7 @@ from launch.substitutions import ThisLaunchFileDir
  
  
 def generate_launch_description():
-    package_name = "senaro"
+    package_name = "senaro_cartographer"
 
     pkg_path = os.path.join(get_package_share_directory(package_name))
 
@@ -26,11 +26,11 @@ def generate_launch_description():
  
     resolution = LaunchConfiguration('resolution', default='0.05')
     publish_period_sec = LaunchConfiguration('publish_period_sec', default='1.0')
-
     
 
     rviz_config = os.path.join(pkg_path, "configuration", "mapping_rviz.rviz")
- 
+    bringup_pkg_path = os.path.join(get_package_share_directory("senaro_bringup"))
+
     return LaunchDescription([
         DeclareLaunchArgument(
             'cartographer_config_dir',
@@ -70,7 +70,7 @@ def generate_launch_description():
         ),
 
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([ThisLaunchFileDir(), '/robot_description.launch.py']),
+            PythonLaunchDescriptionSource([os.path.join(bringup_pkg_path, 'launch'), '/robot_description.launch.py']),
         ),
          
         Node(

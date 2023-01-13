@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(senaro)
+project(senaro_navigation2)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -17,12 +17,13 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(senaro_bringup REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
 install(DIRECTORY
-  launch configuration map param
+  launch map param
   DESTINATION share/${PROJECT_NAME}
 )
 

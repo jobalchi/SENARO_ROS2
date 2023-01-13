@@ -26,7 +26,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    package_name = "senaro"
+    package_name = "senaro_navigation2"
     pkg_path = os.path.join(get_package_share_directory(package_name))
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
@@ -48,9 +48,11 @@ def generate_launch_description():
         'rviz',
         'nav2_default_view.rviz')
 
+    bringup_pkg_path = os.path.join(get_package_share_directory("senaro_bringup"))
+
     return LaunchDescription([
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([ThisLaunchFileDir(), '/robot_description.launch.py']),
+            PythonLaunchDescriptionSource([os.path.join(bringup_pkg_path, 'launch'), '/robot_description.launch.py']),
         ),
         DeclareLaunchArgument(
             'map',
