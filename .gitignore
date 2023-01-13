@@ -1,2 +1,2 @@
-insta360/insta360_node/lib/
-insta360/insta360_node/lib/*.so
+insta360_ros2/insta360_node/lib/
+insta360_ros2/insta360_node/lib/*.so
