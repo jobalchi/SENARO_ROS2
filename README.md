@@ -16,4 +16,5 @@ $ ifconfig -a
 
 # Set up insta360
 Insta360 SDK is not included in this repository. You have to apply for the sdk to get it.
-(🔗 SDK Apply Link)[https://www.insta360.com/kr/sdk/apply]
+
+🔗 SDK Apply Link: https://www.insta360.com/kr/sdk/apply
