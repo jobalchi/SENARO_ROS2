@@ -1,3 +1,18 @@
 [submodule "sllidar_ros2"]
 	path = sllidar_ros2
-	url = https://github.com/Slamtec/sllidar_ros2.git
+	url = git@github.com:Slamtec/sllidar_ros2.git
+[submodule "tracer_ros"]
+	path = tracer_ros
+	url = git@github.com:agilexrobotics/tracer_ros.git
+[submodule "ugv_sdk"]
+	path = ugv_sdk
+	url = git@github.com:agilexrobotics/ugv_sdk.git
+
+[submodule "um7"]
+	path = um7
+	url = git@github.com:mikeferguson/um7.git
+	branch = ros2
+[submodule "serial"]
+	path = serial
+	url = git@github.com:mikeferguson/serial.git
+	branch = ros2
