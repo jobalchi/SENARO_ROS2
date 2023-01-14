@@ -1,4 +1,5 @@
-# SENARO 9VD Robot Package
+# SENARO V9D Robot Package
+![로봇 디자인](assets/robot_design.png "로봇 설계")
 
 # Integrated Install dependencies
 ```
