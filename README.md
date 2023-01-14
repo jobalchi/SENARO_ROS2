@@ -1,4 +1,5 @@
 # SENARO V9D Robot Package
+3D Virtual Tour Production Automation Robot. Robots move around and take pictures through a 360-degree camera to make them.
 ![로봇 디자인](assets/robot_design.png "로봇 설계")
 
 # Integrated Install dependencies
