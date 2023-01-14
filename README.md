@@ -1,10 +1,13 @@
 # SENARO 9VD Robot Package
 
-# Install dependencies
+# Integrated Install dependencies
 ```
 $ sudo apt-get update
 $ sudo apt-get install build-essential git cmake libasio-dev
 $ sudo apt install can-utils
+
+$ sudo apt-get install libusb-dev
+$ sudo apt-get install libudev-dev
 ```
 
 # Set up tracer-mini CAN adapter
