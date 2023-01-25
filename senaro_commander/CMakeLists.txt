@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(senaro_bringup)
+project(senaro_commander)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -17,19 +17,18 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(sllidar_ros2 REQUIRED)
-find_package(tracer_base REQUIRED)
-find_package(insta360_node REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
+find_package(senaro_interface REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-install(DIRECTORY
-  launch
+install(
+  DIRECTORY scripts
   DESTINATION share/${PROJECT_NAME}
 )
-
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -41,5 +40,17 @@ if(BUILD_TESTING)
   #set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+install(PROGRAMS
+  scripts/inspection_demo.py
+  scripts/nav_through_poses_demo.py
+  scripts/nav_to_pose_demo.py
+  scripts/picking_demo.py
+  scripts/robot_navigator.py
+  scripts/security_demo.py
+  scripts/waypoint_follower_demo.py
+  scripts/create_map.py
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 ament_package()

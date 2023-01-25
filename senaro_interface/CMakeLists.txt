@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(senaro_bringup)
+project(senaro_interface)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -17,18 +17,15 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(sllidar_ros2 REQUIRED)
-find_package(tracer_base REQUIRED)
-find_package(insta360_node REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-install(DIRECTORY
-  launch
-  DESTINATION share/${PROJECT_NAME}
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "srv/CreateMap.srv"
 )
-
 
 
 if(BUILD_TESTING)
