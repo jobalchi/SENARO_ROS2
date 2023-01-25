@@ -23,7 +23,7 @@ def generate_launch_description():
     )
 
     base_to_laser_publisher = ExecuteProcess(
-        cmd=["ros2", "run", "tf2_ros", "static_transform_publisher", '0', '0', '0.1', '3.141592', '0', '0', "base_link", "laser"], output="screen"
+        cmd=["ros2", "run", "tf2_ros", "static_transform_publisher", '0', '0', '0.1', '-3.141592', '0', '0', "base_link", "laser"], output="screen"
     )
     odom_to_base_publisher = ExecuteProcess(
         cmd=["ros2", "run", "tf2_ros", "static_transform_publisher", '0', '0', '0', '0', '0', '0', "base_link", "imu_link"], output="screen"

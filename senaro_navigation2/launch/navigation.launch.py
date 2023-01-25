@@ -32,7 +32,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     map_dir = LaunchConfiguration(
         'map',
-        default=os.path.join(pkg_path, 'map', 'halfhalf5.yaml')
+        default=os.path.join(pkg_path, 'map', 'one.yaml')
     )
 
     param_file_name = 'tracer_mini.yaml'
