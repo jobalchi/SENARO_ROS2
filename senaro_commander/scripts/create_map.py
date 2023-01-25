@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 from senaro_interface.srv import CreateMap  # CHANGE
 import rclpy
 from rclpy.node import Node

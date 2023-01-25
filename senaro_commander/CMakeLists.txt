@@ -49,6 +49,7 @@ install(PROGRAMS
   scripts/robot_navigator.py
   scripts/security_demo.py
   scripts/waypoint_follower_demo.py
+  scripts/create_map.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
