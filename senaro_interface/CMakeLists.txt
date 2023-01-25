@@ -27,9 +27,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/CreateMap.srv"
 )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/insta360)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
