@@ -22,6 +22,9 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(tracer_prefix, 'launch', 'tracer_mini_base.launch.py'))
     )
 
+    start_insta360_cmd = ExecuteProcess(
+        cmd=["ros2", "run", "insta360_node", "insta360_node"], output="screen"
+    )
     base_to_laser_publisher = ExecuteProcess(
         cmd=["ros2", "run", "tf2_ros", "static_transform_publisher", '0', '0', '0.1', '3.141592', '0', '0', "base_link", "laser"], output="screen"
     )
@@ -34,4 +37,5 @@ def generate_launch_description():
         odom_to_base_publisher,
         start_s2lidar_cmd,
         start_tracer_mini_cmd,
+        start_insta360_cmd
     ])

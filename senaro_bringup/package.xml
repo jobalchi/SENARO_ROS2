@@ -14,6 +14,7 @@
 	<depend>rclpy</depend>
   <depend>sllidar_ros2</depend>
   <depend>tracer_base</depend>
+  <depend>insta360_node</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
