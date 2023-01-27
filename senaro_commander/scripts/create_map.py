@@ -2,7 +2,7 @@
 
 from senaro_interface.srv import CreateMap  # CHANGE
 from insta360_interface.srv import TakePicture
-from std_msgs.msg import String
+from std_msgs.msg import Float32MultiArray
 
 import rclpy
 from rclpy.node import Node
@@ -31,7 +31,7 @@ class CreateMapServer(Node):
             TakePicture, 'insta360_node/take_picture', callback_group=self.callback_group
         )
 
-        self.publisher = self.create_publisher(String, 'Process_count', 10)
+        self.process_pub = self.create_publisher(Float32MultiArray, 'current_process', 10)
 
         self.nav_to_pose_client = ActionClient(
             self, NavigateToPose, 'navigate_to_pose', callback_group=self.callback_group
@@ -48,6 +48,11 @@ class CreateMapServer(Node):
         for count in range(len_waypoints):
             x = request.waypoints[count * 2]
             y = request.waypoints[count * 2 + 1]
+
+            if count < (len_waypoints - 1):
+                x_next = request.waypoints[(count + 1) * 2]
+                y_next = request.waypoints[(count + 1) * 2 + 1]
+
 
             initial_pose = PoseStamped()
             initial_pose.header.frame_id = 'map'
@@ -67,9 +72,10 @@ class CreateMapServer(Node):
             else:
                 self.warn("nav fail to goal pose x: {0} y: {1}".format(x, y))
 
-            msg = String()
-            msg.data = 'Snap 360° Image Process {0} of {1}'.format(count + 1, len_waypoints)
-            self.publisher.publish(msg)
+            msg = Float32MultiArray()
+
+            msg.data = [x_next, y_next, count+1]
+            self.process_pub.publish(msg)
 
         response.is_successed = True
         return response
