@@ -18,7 +18,7 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, ExecuteProcess
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, ThisLaunchFileDir
@@ -50,6 +50,10 @@ def generate_launch_description():
 
     bringup_pkg_path = os.path.join(get_package_share_directory("senaro_bringup"))
 
+    start_create_map_cmd = ExecuteProcess(
+        cmd=["ros2", "run", "senaro_commander", "create_map.py"], output="screen"
+    )
+
     return LaunchDescription([
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([os.path.join(bringup_pkg_path, 'launch'), '/robot_description.launch.py']),
@@ -76,7 +80,7 @@ def generate_launch_description():
                 'use_sim_time': use_sim_time,
                 'params_file': param_dir}.items(),
         ),
-
+        start_create_map_cmd,
         Node(
             package='rviz2',
             executable='rviz2',

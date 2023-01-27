@@ -25,6 +25,10 @@ def generate_launch_description():
     start_insta360_cmd = ExecuteProcess(
         cmd=["ros2", "run", "insta360_node", "insta360_node"], output="screen"
     )
+
+    start_um7_cmd = ExecuteProcess(
+        cmd=["ros2", "run", "um7", "um7_node"], output="screen"
+    )
     base_to_laser_publisher = ExecuteProcess(
         cmd=["ros2", "run", "tf2_ros", "static_transform_publisher", '0', '0', '0.1', '-3.141592', '0', '0', "base_link", "laser"], output="screen"
     )
@@ -32,10 +36,16 @@ def generate_launch_description():
         cmd=["ros2", "run", "tf2_ros", "static_transform_publisher", '0', '0', '0', '0', '0', '0', "base_link", "imu_link"], output="screen"
     )
 
+    start_web_bridge_cmd = ExecuteProcess(
+        cmd=["ros2", "launch", "rosbridge_server", "rosbridge_websocket_launch.xml"], output="screen"
+    )
+
     return LaunchDescription([
         base_to_laser_publisher,
         odom_to_base_publisher,
         start_s2lidar_cmd,
         start_tracer_mini_cmd,
-        start_insta360_cmd
+        start_insta360_cmd,
+        start_um7_cmd,
+        start_web_bridge_cmd
     ])

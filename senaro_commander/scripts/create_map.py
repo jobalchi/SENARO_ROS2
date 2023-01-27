@@ -59,7 +59,7 @@ class CreateMapServer(Node):
             nav_success = self.goToPose(initial_pose)
 
             if nav_success:
-                self.insta360_request.target_path = "/home/dp3/pictures/picture_{0}".format(count)
+                self.insta360_request.target_path = "/home/senaro/pictures/picture_{0}".format(count)
                 self.insta360_request.source_path = ""
                 self.insta360_request.execute_take_photo = True
                 insta360_response = self.client.call(self.insta360_request)
