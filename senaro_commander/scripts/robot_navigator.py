@@ -39,7 +39,7 @@ class NavigationResult(Enum):
 
 
 class BasicNavigator(Node):
-    def __init__(self):
+    def __init__(self, callback_group = None):
         super().__init__(node_name='basic_navigator')
         self.initial_pose = PoseStamped()
         self.initial_pose.header.frame_id = 'map'
@@ -55,9 +55,16 @@ class BasicNavigator(Node):
           depth=1)
 
         self.initial_pose_received = False
-        self.nav_to_pose_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
-        self.follow_waypoints_client = ActionClient(self, FollowWaypoints, 'FollowWaypoints')
-        self.compute_path_to_pose_client = ActionClient(self, ComputePathToPose, 'compute_path_to_pose')
+
+        if callback_group is None:
+            self.nav_to_pose_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
+            self.follow_waypoints_client = ActionClient(self, FollowWaypoints, 'FollowWaypoints')
+            self.compute_path_to_pose_client = ActionClient(self, ComputePathToPose, 'compute_path_to_pose')
+        else:
+            self.nav_to_pose_client = ActionClient(self, NavigateToPose, 'navigate_to_pose', callback_group = callback_group)
+            self.follow_waypoints_client = ActionClient(self, FollowWaypoints, 'FollowWaypoints', callback_group = callback_group)
+            self.compute_path_to_pose_client = ActionClient(self, ComputePathToPose, 'compute_path_to_pose', callback_group = callback_group)
+
         self.localization_pose_sub = self.create_subscription(PoseWithCovarianceStamped,
                                                               'amcl_pose',
                                                               self._amclPoseCallback,
@@ -89,17 +96,14 @@ class BasicNavigator(Node):
 
         self.info('Navigating to goal: ' + str(pose.pose.position.x) + ' ' +
                       str(pose.pose.position.y) + '...')
-        send_goal_future = self.nav_to_pose_client.send_goal_async(goal_msg,
-                                                                   self._feedbackCallback)
-        rclpy.spin_until_future_complete(self, send_goal_future)
-        self.goal_handle = send_goal_future.result()
+        send_goal_future = self.nav_to_pose_client.send_goal(goal_msg)
+        self.goal_handle = send_goal_future
 
-        if not self.goal_handle.accepted:
+        if not send_goal_future.accepted:
             self.error('Goal to ' + str(pose.pose.position.x) + ' ' +
                            str(pose.pose.position.y) + ' was rejected!')
             return False
-
-        self.result_future = self.goal_handle.get_result_async()
+        self.result_future = send_goal_future
         return True
 
     def followWaypoints(self, poses):
