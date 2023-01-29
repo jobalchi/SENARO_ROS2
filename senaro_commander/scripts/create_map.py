@@ -19,6 +19,18 @@ from action_msgs.msg import GoalStatus
 
 from robot_navigator import BasicNavigator
 
+import serial
+import time
+
+py_serial = serial.Serial(
+    
+    # Window
+    port='/dev/ttyACM0',
+    
+    # 보드 레이트 (통신 속도)
+    baudrate=9600,
+)
+
 class CreateMapServer(Node):
     def __init__(self):
         super().__init__('create_map_service_server')
@@ -43,6 +55,7 @@ class CreateMapServer(Node):
         self.get_logger().info('==== Addition Server Started, Waiting for Request ====')
 
     def create_map_callback(self, request, response):
+        py_serial.write(1)
 
         len_waypoints = len(request.waypoints) // 2
         for count in range(len_waypoints):
@@ -76,6 +89,8 @@ class CreateMapServer(Node):
 
             msg.data = [x_next, y_next, count+1]
             self.process_pub.publish(msg)
+
+        py_serial.write(0)
 
         response.is_successed = True
         return response
