@@ -43,16 +43,19 @@ class CreateMapServer(Node):
         self.get_logger().info('==== Addition Server Started, Waiting for Request ====')
 
     def create_map_callback(self, request, response):
-
+        msg = Float32MultiArray()
+        msg.data = [request.waypoints[0] * 1.0, request.waypoints[1] * 1.0, 0.0]
+        self.process_pub.publish(msg)
+        
         len_waypoints = len(request.waypoints) // 2
         for count in range(len_waypoints):
             x = request.waypoints[count * 2]
             y = request.waypoints[count * 2 + 1]
-
+            x_next = 100000000.1
+            y_next = 100000000.1
             if count < (len_waypoints - 1):
-                x_next = request.waypoints[(count + 1) * 2]
-                y_next = request.waypoints[(count + 1) * 2 + 1]
-
+                x_next = request.waypoints[(count + 1) * 2] * 1.0
+                y_next = request.waypoints[(count + 1) * 2 + 1] * 1.0
 
             initial_pose = PoseStamped()
             initial_pose.header.frame_id = 'map'
@@ -74,7 +77,7 @@ class CreateMapServer(Node):
 
             msg = Float32MultiArray()
 
-            msg.data = [x_next, y_next, count+1]
+            msg.data = [x_next, y_next, count * 1.0 + 1.0]
             self.process_pub.publish(msg)
 
         response.is_successed = True

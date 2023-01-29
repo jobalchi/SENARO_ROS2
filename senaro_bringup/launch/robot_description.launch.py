@@ -46,6 +46,6 @@ def generate_launch_description():
         start_s2lidar_cmd,
         start_tracer_mini_cmd,
         start_insta360_cmd,
-        start_um7_cmd,
+        # start_um7_cmd,
         start_web_bridge_cmd
     ])

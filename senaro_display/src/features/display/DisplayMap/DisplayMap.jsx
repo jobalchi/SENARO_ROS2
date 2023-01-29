@@ -23,10 +23,12 @@ import React from "react";
 
 const DisplayMapThreeJS = ({ robotPosition, markers, origins, goal }) => {
   const itemsRef = useRef(null);
+  const robotRef = useRef(null);
   const camera = useRef(null);
   const orbitControl = useRef(null);
   const test = useLoader(TextureLoader, "/one.png");
   const mapMarker = useLoader(GLTFLoader, "/scene.gltf");
+  const robot = useLoader(GLTFLoader, "/robot.glb");
   const color = new Color(0xffffff);
   const imageSource = test.source.data;
 
@@ -49,8 +51,8 @@ const DisplayMapThreeJS = ({ robotPosition, markers, origins, goal }) => {
 
   useEffect(() => {
     if (robotPosition) {
-      camera.current.position.x = robotPosition.y * -1 + deltaCenterXY[0];
-      camera.current.position.y = robotPosition.x * -1 + deltaCenterXY[1];
+      camera.current.position.x = robotPosition.x * -1 + deltaCenterXY[0];
+      camera.current.position.y = robotPosition.y * -1 + deltaCenterXY[1];
     }
   }, [robotPosition])
 
@@ -88,17 +90,17 @@ const DisplayMapThreeJS = ({ robotPosition, markers, origins, goal }) => {
           />
           <meshBasicMaterial map={test} color={color} />
         </mesh>
-        <mesh
-          position={[
-            robotPosition.y - deltaCenterXY[0],
-            robotPosition.x - deltaCenterXY[1],
-            0.1,
-          ]}
-          rotation={[0, 0, robotPosition.w]}
-        >
-          <circleGeometry args={[0.25, 32, 0, 2 * Math.PI]} />
-          <meshBasicMaterial color="#ff00ff" />
-        </mesh>
+        <primitive
+            ref={robotRef}
+            object={robot.scene.clone()}
+            position={[
+              robotPosition.x - deltaCenterXY[0],
+              robotPosition.y - deltaCenterXY[1],
+              0.15,
+            ]}
+            rotation={[Math.PI / 2, 0, 0]}
+            scale={0.02}
+          />
         {markers.map((marker, index) => (
           <primitive
             key={index}
@@ -111,7 +113,7 @@ const DisplayMapThreeJS = ({ robotPosition, markers, origins, goal }) => {
             position={[
               marker[0] - deltaCenterXY[0],
               marker[1] - deltaCenterXY[1],
-              1.2,
+              1,
             ]}
             rotation={[Math.PI / 2, 0, 0]}
             scale={0.3}
@@ -122,7 +124,7 @@ const DisplayMapThreeJS = ({ robotPosition, markers, origins, goal }) => {
   );
 };
 
-const DisplayMap = React.memo(({ className, odometry, markers, origins, goal }) => {
+const DisplayMap = React.memo(({ className, odometry, mapToOdom, markers, origins, goal }) => {
   const robotPosition = odometry
     ? {
         ...odometry.pose.pose.position,
@@ -130,6 +132,12 @@ const DisplayMap = React.memo(({ className, odometry, markers, origins, goal }) 
       }
     : { x: 0, y: 0, z: 0, w: 0 };
 
+  robotPosition.x = mapToOdom.x
+  robotPosition.y = mapToOdom.y
+  // robotPosition.x += mapToOdom.x
+  // robotPosition.y += mapToOdom.y
+
+  robotPosition.z = mapToOdom.z
   const quaternion = new Quaternion(
     robotPosition.x,
     robotPosition.y,
